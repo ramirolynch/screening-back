@@ -83,6 +83,33 @@ routes.post("/matchreview", (req, res) => {
   });
 });
 
+routes.get("/matchreview/:id", (req, res) => {
+  db.manyOrNone("select * from match_reviews where user_id = ${id}", {
+    id: req.params.id,
+  })
+    .then((data) => res.json(data))
+    .catch((error) => console.log(error));
+});
+
+routes.post("/nomatch", (req, res) => {
+  const nomatch = {
+    searched_name: req.body.searched_name,
+    user_id: req.body.user_id,
+  };
+  db.one(
+    "INSERT INTO no_match(searched_name, user_id) VALUES(${searched_name}, ${user_id}) returning id",
+    nomatch
+  )
+    .then((id) => {
+      return db.oneOrNone("SELECT * FROM no_match WHERE id = ${id}", {
+        id: id.id,
+      });
+    })
+    .then((data) => res.json(data))
+
+    .catch((error) => res.status(500).send(error));
+});
+
 routes.post("/login", (req, res) => {
   db.oneOrNone("select id, email, password from users where email = ${email}", {
     email: req.body.email,
