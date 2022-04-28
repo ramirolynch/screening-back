@@ -32,7 +32,6 @@ routes.post("/signup", (req, res) => {
     if (user) {
       return res.status(400).send("Email was already registered.");
     }
-
     db.one(
       "INSERT INTO users(first_name, last_name, email, password) VALUES(${first_name}, ${last_name}, ${email}, ${password}) returning id",
       newUser
@@ -43,7 +42,6 @@ routes.post("/signup", (req, res) => {
         });
       })
       .then((data) => res.json(data))
-
       .catch((error) => res.status(500).send(error));
   });
 });
@@ -58,7 +56,6 @@ routes.post("/matchreview", (req, res) => {
     review_comments: req.body.review_comments,
     user_id: req.body.user_id,
   };
-
   db.oneOrNone("select * from match_reviews where list_id = ${list_id}", {
     list_id: req.body.list_id,
   }).then((match) => {
@@ -67,7 +64,6 @@ routes.post("/matchreview", (req, res) => {
         .status(400)
         .send("There is a match review with that list_id already.");
     }
-
     db.one(
       "INSERT INTO match_reviews(list_id, searched_name, matched_name, score, positive_match, review_comments, user_id) VALUES(${list_id}, ${searched_name}, ${matched_name}, ${score}, ${positive_match}, ${review_comments}, ${user_id}) returning id",
       matchrev
@@ -78,7 +74,6 @@ routes.post("/matchreview", (req, res) => {
         });
       })
       .then((data) => res.json(data))
-
       .catch((error) => res.status(500).send(error));
   });
 });
@@ -106,7 +101,6 @@ routes.post("/nomatch", (req, res) => {
       });
     })
     .then((data) => res.json(data))
-
     .catch((error) => res.status(500).send(error));
 });
 
@@ -121,13 +115,23 @@ routes.post("/login", (req, res) => {
     if (!bcrypt.compareSync(req.body.password, user.password)) {
       return res.status(400).send("Invalid email or password.");
     }
-
     res.json(user);
   });
 });
 
 routes.get("/users", (req, res) => {
   db.manyOrNone("select * from users")
+    .then((data) => res.json(data))
+    .catch((error) => console.log(error));
+});
+
+routes.get("/nomatch/:id", (req, res) => {
+  db.manyOrNone(
+    "select no_match.searched_name, no_match.screening_ts, no_match.user_id, users.first_name, users.last_name from no_match join users on no_match.user_id = users.id where users.id = ${id}",
+    {
+      id: req.params.id,
+    }
+  )
     .then((data) => res.json(data))
     .catch((error) => console.log(error));
 });
