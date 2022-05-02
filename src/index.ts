@@ -2,6 +2,7 @@
 import express from "express"; // require the cors module
 import cors from "cors";
 import authroutes from "./routes/authroutes";
+import matchroutes from "./routes/matchroutes";
 
 // creates an instance of an Express server
 const app = express();
@@ -10,6 +11,7 @@ app.use(cors());
 // allow POST and PUT requests to use JSON bodies
 app.use(express.json()); // define the port
 app.use("/", authroutes);
+app.use("/", matchroutes);
 
 const port = 3000;
 // run the server
