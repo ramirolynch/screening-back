@@ -154,7 +154,7 @@ routes.put("/nomatch/:id", (req, res) => {
 
 routes.get("/nomatch/:id", (req, res) => {
   db.manyOrNone(
-    "select no_match.searched_name, no_match.screening_ts, no_match.user_id, users.first_name, users.last_name from no_match join users on no_match.user_id = users.id where users.id = ${id}",
+    "select no_match.id, no_match.searched_name, no_match.screening_ts, no_match.user_id, users.first_name, users.last_name from no_match join users on no_match.user_id = users.id where users.id = ${id}",
     {
       id: req.params.id,
     }
