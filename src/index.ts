@@ -16,3 +16,5 @@ app.use("/", matchroutes);
 const port = 3000;
 // run the server
 app.listen(port, () => console.log(`Listening on port: ${port}.`));
+
+module.exports = app;
