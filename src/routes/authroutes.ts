@@ -1,4 +1,5 @@
 // require the express module
+import "dotenv/config";
 import express from "express";
 import pg from "pg-promise";
 const Joi = require("joi");

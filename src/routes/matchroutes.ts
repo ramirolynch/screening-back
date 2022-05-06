@@ -1,3 +1,4 @@
+import "dotenv/config";
 // require the express module
 import express from "express";
 import pg from "pg-promise";
