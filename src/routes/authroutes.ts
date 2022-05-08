@@ -65,12 +65,6 @@ routes.post("/login", (req, res) => {
   });
 });
 
-routes.get("/users", (req, res) => {
-  db.manyOrNone("select * from users")
-    .then((data) => res.json(data))
-    .catch((error) => console.log(error));
-});
-
 //user by id
 routes.get("/users/:id", (req, res) => {
   db.oneOrNone("select * from users WHERE id = ${id}", {
